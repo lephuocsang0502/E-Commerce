@@ -1,0 +1,118 @@
+﻿@model IEnumerable<Model.EF.Product>
+
+
+@{
+    var category = (Model.EF.ProductCategory)ViewBag.Category;
+    ViewBag.Title = "Quản lý sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section header{
+    Danh sách sản phẩm
+}
+@section jsHeader{
+
+    <link href="/Assets/admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+}
+@section jsFooter{
+    <script src="/Assets/admin/js/controller/userController.js"></script>
+    <script src="/Assets/admin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/Assets/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="/Assets/admin/js/demo/datatables-demo.js"></script>
+
+}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-5">
+                            @using (Html.BeginForm("Index", "Product", FormMethod.Get))
+                            {
+
+                                @*<div class="input-group">
+                                        <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control bg-light" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+
+                                        <div class="col-md-1"></div>
+
+                                    </div>*@
+                                <div class="input-group-btn">
+                                    <a class="btn btn-primary" href="/Admin/Product/Create">Thêm mới</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 72px;">Tên Sách</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 103px;">Thể Loại</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 54px;">Mô tả</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 69px;">Trạng thái</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 31px;">#</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 67px;">Ảnh</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 67px;">Giá</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr id="row_@item.ID">
+                                            <td>@item.Name</td>
+                                            <td>@item.ProductCategory.Name</td>
+                                            <td>@item.Description</td>
+                                            <td><a href="#" class="btn-active" data-id="@item.ID">@(item.Status ? "Kích hoạt":"Khóa")</a></td>
+
+                                            <td>
+                                                <a href="/Admin/Product/Edit/@item.ID">Sửa</a>
+                                                |
+                                                @Ajax.ActionLink("Xoá", "Delete", new { @id = item.ID }, new AjaxOptions
+                                           {
+                                               Confirm = "Bạn có muốn xoá bản ghi này?",
+                                               OnComplete = "$('#row_" + @item.ID + "').remove()",
+                                               HttpMethod = "Delete"
+                                           })
+                                            </td>
+                                            <td><img src="@item.Image" alt="" style="width:150px;height:150px;" /></td>
+                                            <td>@item.Price</td>
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @*<div class="row">
+
+                            <div class="col-sm-12 col-md-7">
+                                <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+                                    <ul class="pagination">
+
+                                        @Html.PagedListPager(Model, page => Url.Action("Index", new { @class = "paginate_button page-item ", page }))
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>*@
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

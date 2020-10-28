@@ -1,0 +1,147 @@
+﻿@model List<OnlineShop.Models.CartItem>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var session = (UserLogin)Session[OnlineShop.Common.CommonConstants.USER_SESSION];
+}
+
+@section jsFooter{
+
+    <script src="/Assets/client/js/controller/cartController.js"></script>
+}
+@if (Model.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Option</td>
+                <td>Mã SP</td>
+                <td>Tên SP</td>
+                <td>Ảnh SP</td>
+                <td>Số Lượng</td>
+                <td>Đơn Giá</td>
+                <td>Thành Tiền</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><a href="#" data-id="@item.Product.ID" class="btn-delete">Xóa</a> </td>
+                    <td>@item.Product.ID</td>
+                    <td>@item.Product.Name</td>
+                    <td><img src="@item.Product.Image" width="100" /></td>
+                    <td><input type="text" class="txtQuantity" data-id="@item.Product.ID" value=" @item.Quantity" /></td>
+                    <td>@item.Product.Price.GetValueOrDefault(0).ToString("N0")</td>
+                    <td>@((item.Product.Price.GetValueOrDefault(0)*item.Quantity).ToString("N0"))</td>
+                </tr>
+            }
+            <tr>
+                <td align="right" colspan="6">Sum</td>
+                <td>
+                    @Model.Sum(item => item.Product.Price.GetValueOrDefault(0) * item.Quantity).ToString("N0")
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button id="btnContinue" class="btn">Tiếp tục mua hàng </button>
+    <button id="btnDeleteAll" class="btn">Xóa toàn bộ</button>
+    <button id="btnUpdate" class="btn"> Cập nhật</button>
+    <button id="btnPayment" class="btn" data-toggle="modal" data-target="#payment"> Thanh toan</button>
+    <a href="/Cart/PaymentWithPaypal" class="btn-circle">Papal</a>
+}
+else
+{
+    <span class="alert alert-danger">Chưa có sản phẩm nào</span>
+}
+
+@using (Html.BeginForm("Payment", "Cart", FormMethod.Post))
+{
+    if (session == null)
+    {
+        <div class="modal fade" id="payment" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thông tin</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+
+                            <div class="form-group">
+                                <label>Người nhận</label>
+                                <input name="shipName" class="form-control" placeholder="Nhập tên người nhận">
+                            </div>
+                            <div class="form-group">
+                                <label>Điện thoại</label>
+                                <input name="mobile" class="form-control" placeholder="Nhập số điện thoại">
+                            </div>
+                            <div class="form-group">
+                                <label>Địa chỉ</label>
+                                <input name="address" class="form-control" placeholder="Nhập địa chỉ">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input name="email" class="form-control" placeholder="Nhập email">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Gửi thông tin</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+                        <button type="button" class="btn btn-primary">Đăng kí</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="modal fade" id="payment" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thông tin</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+
+                            <div class="form-group">
+                                <label>Người nhận</label>
+                                <input name="shipName" class="form-control" value="@session.Name" placeholder="Nhập tên người nhận">
+                            </div>
+                            <div class="form-group">
+                                <label>Điện thoại</label>
+                                <input name="mobile" class="form-control" value="@session.Phone"placeholder="Nhập số điện thoại">
+                            </div>
+                            <div class="form-group">
+                                <label>Địa chỉ</label>
+                                <input name="address" class="form-control" value="@session.Address" placeholder="Nhập địa chỉ">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input name="email" class="form-control" value="@session.Email" placeholder="Nhập email">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Gửi thông tin</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+                        <button type="button" class="btn btn-primary">Đăng kí</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+}
+
+

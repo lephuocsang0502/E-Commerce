@@ -1,0 +1,118 @@
+﻿@model IEnumerable<Model.EF.Order>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section header{
+    Danh sách sản phẩm
+}
+@section jsHeader{
+
+    <link href="/Assets/admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+}
+@section jsFooter{
+    <script src="~/Assets/admin/js/controller/orderController.js"></script>
+    <script src="/Assets/admin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/Assets/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="/Assets/admin/js/demo/datatables-demo.js"></script>
+
+}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-5">
+                            @using (Html.BeginForm("Index", "Order", FormMethod.Get))
+                            {
+
+                                @*<div class="input-group">
+                                        <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control bg-light" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+
+                                        <div class="col-md-1"></div>
+
+                                    </div>*@
+                                <div class="input-group-btn">
+                                    <a class="btn btn-primary" href="/Admin/Product/Create">Thêm mới</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                                <thead>
+                                    <tr role="row">
+                                        <th >Tên Khách </th>
+                                        <th >Địa chỉ</th>
+                                        <th >Email</th>
+                                        <th >Trạng thái</th>
+                                        <th>#</th>
+                                        <th >SDT</th>
+                                        <th>Mã Khách Hàng</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr id="row_@item.ID">
+                                            <td>@item.ShipName</td>
+                                            <td>@item.ShipAddress</td>
+                                            <td>@item.ShipEmail</td>
+                                            <td><a href="#" class="btn-active" data-id="@item.ID">@(item.Status ? "Đã duyệt":"Chưa duyệt")</a></td>
+
+                                            <td>
+                                                <a href="/Admin/Order/Edit/@item.ID">Sửa</a>
+                                                |
+                                                @Ajax.ActionLink("Xoá", "Delete", new { @id = item.ID }, new AjaxOptions
+                                           {
+                                               Confirm = "Bạn có muốn xoá bản ghi này?",
+                                               OnComplete = "$('#row_" + @item.ID + "').remove()",
+                                               HttpMethod = "Delete"
+                                           })
+                                                |
+                                                <a href="/Admin/Order/Details/@item.ID">Detail</a>
+                                            </td>
+                                            <td>@item.ShipMobile</td>
+                                            <td>@item.CustomerID</td>
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @*<div class="row">
+
+                            <div class="col-sm-12 col-md-7">
+                                <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+                                    <ul class="pagination">
+
+                                        @Html.PagedListPager(Model, page => Url.Action("Index", new { @class = "paginate_button page-item ", page }))
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>*@
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

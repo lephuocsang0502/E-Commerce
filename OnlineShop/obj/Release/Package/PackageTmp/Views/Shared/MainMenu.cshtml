@@ -1,0 +1,16 @@
+﻿@model List<Model.EF.Menu>
+
+
+
+    <div class="col-md-6 col-xs-6 text-center menu-1">
+        <ul>
+            @foreach (var item in Model)
+            {
+                <li><a href="@item.Link" target="@item.Target">@item.Text</a></li>
+
+            }
+            @{ Html.RenderAction("ProductCategory", "Product");}
+
+
+        </ul>
+    </div>
